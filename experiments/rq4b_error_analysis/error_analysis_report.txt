@@ -1,0 +1,254 @@
+====================================================================================================
+ERROR ANALYSIS: Simple SZZ Agent Incorrect Predictions
+====================================================================================================
+
+Total incorrect predictions: 13
+  GT not in candidate set: 4
+  GT in candidate set but wrong selection: 9
+
+Failure categories:
+  bic_not_in_candidates
+  incorrect_analysis
+  near_miss
+  questionable_label
+  could_not_determine
+
+====================================================================================================
+CASE 1: Entry 4828
+====================================================================================================
+
+Fix commit: 0f82c3ba66c6  (2025-09-09 18:28:27 -0700)
+Fix files: drivers/net/macsec.c
+Ground truth BIC: 7e4d784f5810  (2025-03-06 12:59:44 -0800)
+GT BIC files: include/linux/netdevice.h, net/core/Makefile, net/core/dev.c, net/core/dev.h, net/core/dev_api.c, net/core/rtnetlink.c
+GT-Fix file overlap: []
+
+CLASSIFICATION: bic_not_in_candidates
+
+====================================================================================================
+CASE 2: Entry 1800
+====================================================================================================
+
+Fix commit: 6afe40ff484a  (2025-11-24 02:58:30 -0500)
+Fix files: drivers/infiniband/hw/bnxt_re/qplib_sp.c
+Ground truth BIC: de1d364c3815  (2024-08-27 10:15:57 -0300)
+GT BIC files: drivers/infiniband/hw/bnxt_re/ib_verbs.c, drivers/infiniband/hw/bnxt_re/main.c, drivers/infiniband/hw/bnxt_re/qplib_fp.c, drivers/infiniband/hw/bnxt_re/qplib_fp.h, drivers/infiniband/hw/bnxt_re/qplib_sp.c, drivers/infiniband/hw/bnxt_re/qplib_sp.h
+GT-Fix file overlap: ['drivers/infiniband/hw/bnxt_re/qplib_sp.c']
+
+Candidate set size: 69 (detail reports: 69)
+GT in candidates: True
+GT position: 50 (from end: 18)
+
+Predicted BIC: a62d68581441  (2023-12-11 09:56:28 +0200)
+Predicted position: 47
+
+CLASSIFICATION: near_miss
+
+====================================================================================================
+CASE 3: Entry 4140
+====================================================================================================
+
+Fix commit: 0389c305ef56  (2025-09-23 14:14:16 -0700)
+Fix files: tools/testing/selftests/mm/madv_populate.c, tools/testing/selftests/mm/soft-dirty.c, tools/testing/selftests/mm/vm_util.c, tools/testing/selftests/mm/vm_util.h
+Ground truth BIC: 9f3265db6ae8  (2022-04-28 23:16:11 -0700)
+GT BIC files: tools/testing/selftests/vm/.gitignore, tools/testing/selftests/vm/Makefile, tools/testing/selftests/vm/config, tools/testing/selftests/vm/soft-dirty.c
+GT-Fix file overlap: []
+
+Candidate set size: 56 (detail reports: 56)
+GT in candidates: True
+GT position: 2 (from end: 53)
+
+Predicted BIC: f6dd4e223d87  (2023-08-18 10:12:42 -0700)
+Predicted position: 25
+
+Agent explanation (truncated): Candidate 26 introduced the bug by adding the `system_has_softdirty()` function with an inadequate architecture-based check for soft-dirty support. The bug: The function only checked if the system architecture was aarch64, returning 0 (false) for arm64 and 1 (true) for all other architectures. This approach incorrectly assumed that all non-arm64 architectures support soft-dirty, even when CONFIG_MEM_SOFT_DIRTY is disabled in the kernel configuration. The problematic code added in candidate_26: `
+
+CLASSIFICATION: incorrect_analysis
+ANALYSIS: The GT commit introduced the soft-dirty test without checking if CONFIG_MEM_SOFT_DIRTY was enabled. The agent incorrectly focused on the arm64-specific skip commit rather than the original test introduction. The fix adds a proper CONFIG check, and the GT BIC is the commit that should have included this check from the start.
+
+====================================================================================================
+CASE 4: Entry 1829
+====================================================================================================
+
+Fix commit: d6732ef4ab25  (2025-11-21 15:59:21 +0100)
+Fix files: drivers/gpu/drm/bridge/sii902x.c
+Ground truth BIC: 3de47e1309c2  (2024-02-09 10:15:45 +0200)
+GT BIC files: drivers/gpu/drm/bridge/sii902x.c
+GT-Fix file overlap: ['drivers/gpu/drm/bridge/sii902x.c']
+
+Candidate set size: 64 (detail reports: 64)
+GT in candidates: True
+GT position: 45 (from end: 18)
+
+Predicted BIC: f4319f72a9bc  (2022-01-17 10:50:38 +0100)
+Predicted position: 30
+
+Agent explanation (truncated): Candidate_31 introduced the bug by implementing a problematic pattern in the sii902x driver where HDMI detection state was cached in a `sink_is_hdmi` field and used in the wrong callback. Specifically, this commit: 1. Added the `bool sink_is_hdmi` field to the sii902x struct (line 14) 2. Set this field in `sii902x_get_edid()` by calling `drm_detect_hdmi_monitor(edid)` and caching the result (lines 64-71) 3. Used the cached `sink_is_hdmi` value in `sii902x_bridge_mode_set()` to determine whether 
+
+CLASSIFICATION: questionable_label
+ANALYSIS: The GT BIC (pos 45, 'drm/bridge: sii902x: use display info is_hdmi') simplified HDMI detection by using cached connector info. The agent predicted (pos 30) 'drm/bridge: sii902x: add support for DRM_BRIDGE_ATTACH_NO_CONNECTOR' which introduced the NO_CONNECTOR mode that creates the code path where sink_is_hdmi is never populated. The bug only manifests when NO_CONNECTOR mode is used, so the predicted commit arguably introduced the problematic interaction. Both commits contribute to the bug, so the ground truth commit is not necessarily wrong, but in this case maybe the ground truth should be the set of both commits.
+
+====================================================================================================
+CASE 5: Entry 356
+====================================================================================================
+
+Fix commit: 4795d205d786  (2026-01-14 22:16:25 -0800)
+Fix files: mm/kmsan/shadow.c
+Ground truth BIC: b073d7f8aee4  (2022-10-03 14:03:20 -0700)
+GT BIC files: arch/x86/include/asm/page_64.h, arch/x86/mm/ioremap.c, include/linux/highmem.h, include/linux/kmsan.h, mm/internal.h, mm/kmsan/hooks.c, mm/kmsan/shadow.c, mm/memory.c, mm/page_alloc.c, mm/vmalloc.c
+GT-Fix file overlap: ['mm/kmsan/shadow.c']
+
+Candidate set size: 18 (detail reports: 18)
+GT in candidates: True
+GT position: 1 (from end: 16)
+
+Predicted BIC: 5d7800d9cb9a  (2023-08-21 13:37:29 -0700)
+Predicted position: 8
+
+Agent explanation (truncated): The bug was introduced in candidate_09, which changed the size calculation in kmsan_free_page() from `PAGE_SIZE << compound_order(page)` to `page_size(page)`. The bug description states that page_size() only works correctly for order-0 and compound pages. For non-compound high-order pages, it incorrectly returns PAGE_SIZE instead of the actual allocation size (PAGE_SIZE << order). This means that tail pages of high-order non-compound pages were not getting poisoned during free operations. In can
+
+CLASSIFICATION: questionable_label
+ANALYSIS: The GT BIC (pos 1, 'mm: kmsan: maintain KMSAN metadata for page operations') is the initial commit introducing the entire KMSAN page metadata subsystem. The agent predicted (pos 8) 'mm: kmsan: use helper function page_size()' which is the commit that actually introduced the buggy page_size() call replacing the correct PAGE_SIZE << compound_order(page). The agent's prediction identifies the commit that introduced the specific incorrect code change, which is arguably the true bug-introducing commit. The GT label points to the initial feature introduction ('Introducing a new function' category per dataset documentation).
+
+====================================================================================================
+CASE 6: Entry 3114
+====================================================================================================
+
+Fix commit: ce29214ada6d  (2025-10-23 20:09:30 -0700)
+Fix files: drivers/gpu/drm/xe/xe_ggtt.c
+Ground truth BIC: dd08ebf6c352  (2023-12-12 14:05:48 -0500)
+GT BIC files: Documentation/gpu/drivers.rst, Documentation/gpu/xe/index.rst, Documentation/gpu/xe/xe_cs.rst, Documentation/gpu/xe/xe_firmware.rst, Documentation/gpu/xe/xe_gt_mcr.rst, Documentation/gpu/xe/xe_map.rst, Documentation/gpu/xe/xe_migrate.rst, Documentation/gpu/xe/xe_mm.rst, Documentation/gpu/xe/xe_pcode.rst, Documentation/gpu/xe/xe_pm.rst, Documentation/gpu/xe/xe_rtp.rst, Documentation/gpu/xe/xe_wa.rst, drivers/gpu/drm/Kconfig, drivers/gpu/drm/Makefile, drivers/gpu/drm/xe/.gitignore, drivers/gpu/drm/xe/Kconfig, drivers/gpu/drm/xe/Kconfig.debug, drivers/gpu/drm/xe/Makefile, drivers/gpu/drm/xe/abi/guc_actions_abi.h, drivers/gpu/drm/xe/abi/guc_actions_slpc_abi.h, drivers/gpu/drm/xe/abi/guc_communication_ctb_abi.h, drivers/gpu/drm/xe/abi/guc_communication_mmio_abi.h, drivers/gpu/drm/xe/abi/guc_errors_abi.h, drivers/gpu/drm/xe/abi/guc_klvs_abi.h, drivers/gpu/drm/xe/abi/guc_messages_abi.h, drivers/gpu/drm/xe/tests/Makefile, drivers/gpu/drm/xe/tests/xe_bo.c, drivers/gpu/drm/xe/tests/xe_bo_test.c, drivers/gpu/drm/xe/tests/xe_dma_buf.c, drivers/gpu/drm/xe/tests/xe_dma_buf_test.c, drivers/gpu/drm/xe/tests/xe_migrate.c, drivers/gpu/drm/xe/tests/xe_migrate_test.c, drivers/gpu/drm/xe/tests/xe_test.h, drivers/gpu/drm/xe/xe_bb.c, drivers/gpu/drm/xe/xe_bb.h, drivers/gpu/drm/xe/xe_bb_types.h, drivers/gpu/drm/xe/xe_bo.c, drivers/gpu/drm/xe/xe_bo.h, drivers/gpu/drm/xe/xe_bo_doc.h, drivers/gpu/drm/xe/xe_bo_evict.c, drivers/gpu/drm/xe/xe_bo_evict.h, drivers/gpu/drm/xe/xe_bo_types.h, drivers/gpu/drm/xe/xe_debugfs.c, drivers/gpu/drm/xe/xe_debugfs.h, drivers/gpu/drm/xe/xe_device.c, drivers/gpu/drm/xe/xe_device.h, drivers/gpu/drm/xe/xe_device_types.h, drivers/gpu/drm/xe/xe_dma_buf.c, drivers/gpu/drm/xe/xe_dma_buf.h, drivers/gpu/drm/xe/xe_drv.h, drivers/gpu/drm/xe/xe_engine.c, drivers/gpu/drm/xe/xe_engine.h, drivers/gpu/drm/xe/xe_engine_types.h, drivers/gpu/drm/xe/xe_exec.c, drivers/gpu/drm/xe/xe_exec.h, drivers/gpu/drm/xe/xe_execlist.c, drivers/gpu/drm/xe/xe_execlist.h, drivers/gpu/drm/xe/xe_execlist_types.h, drivers/gpu/drm/xe/xe_force_wake.c, drivers/gpu/drm/xe/xe_force_wake.h, drivers/gpu/drm/xe/xe_force_wake_types.h, drivers/gpu/drm/xe/xe_ggtt.c, drivers/gpu/drm/xe/xe_ggtt.h, drivers/gpu/drm/xe/xe_ggtt_types.h, drivers/gpu/drm/xe/xe_gpu_scheduler.c, drivers/gpu/drm/xe/xe_gpu_scheduler.h, drivers/gpu/drm/xe/xe_gpu_scheduler_types.h, drivers/gpu/drm/xe/xe_gt.c, drivers/gpu/drm/xe/xe_gt.h, drivers/gpu/drm/xe/xe_gt_clock.c, drivers/gpu/drm/xe/xe_gt_clock.h, drivers/gpu/drm/xe/xe_gt_debugfs.c, drivers/gpu/drm/xe/xe_gt_debugfs.h, drivers/gpu/drm/xe/xe_gt_mcr.c, drivers/gpu/drm/xe/xe_gt_mcr.h, drivers/gpu/drm/xe/xe_gt_pagefault.c, drivers/gpu/drm/xe/xe_gt_pagefault.h, drivers/gpu/drm/xe/xe_gt_sysfs.c, drivers/gpu/drm/xe/xe_gt_sysfs.h, drivers/gpu/drm/xe/xe_gt_sysfs_types.h, drivers/gpu/drm/xe/xe_gt_topology.c, drivers/gpu/drm/xe/xe_gt_topology.h, drivers/gpu/drm/xe/xe_gt_types.h, drivers/gpu/drm/xe/xe_guc.c, drivers/gpu/drm/xe/xe_guc.h, drivers/gpu/drm/xe/xe_guc_ads.c, drivers/gpu/drm/xe/xe_guc_ads.h, drivers/gpu/drm/xe/xe_guc_ads_types.h, drivers/gpu/drm/xe/xe_guc_ct.c, drivers/gpu/drm/xe/xe_guc_ct.h, drivers/gpu/drm/xe/xe_guc_ct_types.h, drivers/gpu/drm/xe/xe_guc_debugfs.c, drivers/gpu/drm/xe/xe_guc_debugfs.h, drivers/gpu/drm/xe/xe_guc_engine_types.h, drivers/gpu/drm/xe/xe_guc_fwif.h, drivers/gpu/drm/xe/xe_guc_hwconfig.c, drivers/gpu/drm/xe/xe_guc_hwconfig.h, drivers/gpu/drm/xe/xe_guc_log.c, drivers/gpu/drm/xe/xe_guc_log.h, drivers/gpu/drm/xe/xe_guc_log_types.h, drivers/gpu/drm/xe/xe_guc_pc.c, drivers/gpu/drm/xe/xe_guc_pc.h, drivers/gpu/drm/xe/xe_guc_pc_types.h, drivers/gpu/drm/xe/xe_guc_reg.h, drivers/gpu/drm/xe/xe_guc_submit.c, drivers/gpu/drm/xe/xe_guc_submit.h, drivers/gpu/drm/xe/xe_guc_types.h, drivers/gpu/drm/xe/xe_huc.c, drivers/gpu/drm/xe/xe_huc.h, drivers/gpu/drm/xe/xe_huc_debugfs.c, drivers/gpu/drm/xe/xe_huc_debugfs.h, drivers/gpu/drm/xe/xe_huc_types.h, drivers/gpu/drm/xe/xe_hw_engine.c, drivers/gpu/drm/xe/xe_hw_engine.h, drivers/gpu/drm/xe/xe_hw_engine_types.h, drivers/gpu/drm/xe/xe_hw_fence.c, drivers/gpu/drm/xe/xe_hw_fence.h, drivers/gpu/drm/xe/xe_hw_fence_types.h, drivers/gpu/drm/xe/xe_irq.c, drivers/gpu/drm/xe/xe_irq.h, drivers/gpu/drm/xe/xe_lrc.c, drivers/gpu/drm/xe/xe_lrc.h, drivers/gpu/drm/xe/xe_lrc_types.h, drivers/gpu/drm/xe/xe_macros.h, drivers/gpu/drm/xe/xe_map.h, drivers/gpu/drm/xe/xe_migrate.c, drivers/gpu/drm/xe/xe_migrate.h, drivers/gpu/drm/xe/xe_migrate_doc.h, drivers/gpu/drm/xe/xe_mmio.c, drivers/gpu/drm/xe/xe_mmio.h, drivers/gpu/drm/xe/xe_mocs.c, drivers/gpu/drm/xe/xe_mocs.h, drivers/gpu/drm/xe/xe_module.c, drivers/gpu/drm/xe/xe_module.h, drivers/gpu/drm/xe/xe_pci.c, drivers/gpu/drm/xe/xe_pci.h, drivers/gpu/drm/xe/xe_pcode.c, drivers/gpu/drm/xe/xe_pcode.h, drivers/gpu/drm/xe/xe_pcode_api.h, drivers/gpu/drm/xe/xe_platform_types.h, drivers/gpu/drm/xe/xe_pm.c, drivers/gpu/drm/xe/xe_pm.h, drivers/gpu/drm/xe/xe_preempt_fence.c, drivers/gpu/drm/xe/xe_preempt_fence.h, drivers/gpu/drm/xe/xe_preempt_fence_types.h, drivers/gpu/drm/xe/xe_pt.c, drivers/gpu/drm/xe/xe_pt.h, drivers/gpu/drm/xe/xe_pt_types.h, drivers/gpu/drm/xe/xe_pt_walk.c, drivers/gpu/drm/xe/xe_pt_walk.h, drivers/gpu/drm/xe/xe_query.c, drivers/gpu/drm/xe/xe_query.h, drivers/gpu/drm/xe/xe_reg_sr.c, drivers/gpu/drm/xe/xe_reg_sr.h, drivers/gpu/drm/xe/xe_reg_sr_types.h, drivers/gpu/drm/xe/xe_reg_whitelist.c, drivers/gpu/drm/xe/xe_reg_whitelist.h, drivers/gpu/drm/xe/xe_res_cursor.h, drivers/gpu/drm/xe/xe_ring_ops.c, drivers/gpu/drm/xe/xe_ring_ops.h, drivers/gpu/drm/xe/xe_ring_ops_types.h, drivers/gpu/drm/xe/xe_rtp.c, drivers/gpu/drm/xe/xe_rtp.h, drivers/gpu/drm/xe/xe_rtp_types.h, drivers/gpu/drm/xe/xe_sa.c, drivers/gpu/drm/xe/xe_sa.h, drivers/gpu/drm/xe/xe_sa_types.h, drivers/gpu/drm/xe/xe_sched_job.c, drivers/gpu/drm/xe/xe_sched_job.h, drivers/gpu/drm/xe/xe_sched_job_types.h, drivers/gpu/drm/xe/xe_step.c, drivers/gpu/drm/xe/xe_step.h, drivers/gpu/drm/xe/xe_step_types.h, drivers/gpu/drm/xe/xe_sync.c, drivers/gpu/drm/xe/xe_sync.h, drivers/gpu/drm/xe/xe_sync_types.h, drivers/gpu/drm/xe/xe_trace.c, drivers/gpu/drm/xe/xe_trace.h, drivers/gpu/drm/xe/xe_ttm_gtt_mgr.c, drivers/gpu/drm/xe/xe_ttm_gtt_mgr.h, drivers/gpu/drm/xe/xe_ttm_gtt_mgr_types.h, drivers/gpu/drm/xe/xe_ttm_vram_mgr.c, drivers/gpu/drm/xe/xe_ttm_vram_mgr.h, drivers/gpu/drm/xe/xe_ttm_vram_mgr_types.h, drivers/gpu/drm/xe/xe_tuning.c, drivers/gpu/drm/xe/xe_tuning.h, drivers/gpu/drm/xe/xe_uc.c, drivers/gpu/drm/xe/xe_uc.h, drivers/gpu/drm/xe/xe_uc_debugfs.c, drivers/gpu/drm/xe/xe_uc_debugfs.h, drivers/gpu/drm/xe/xe_uc_fw.c, drivers/gpu/drm/xe/xe_uc_fw.h, drivers/gpu/drm/xe/xe_uc_fw_abi.h, drivers/gpu/drm/xe/xe_uc_fw_types.h, drivers/gpu/drm/xe/xe_uc_types.h, drivers/gpu/drm/xe/xe_vm.c, drivers/gpu/drm/xe/xe_vm.h, drivers/gpu/drm/xe/xe_vm_doc.h, drivers/gpu/drm/xe/xe_vm_madvise.c, drivers/gpu/drm/xe/xe_vm_madvise.h, drivers/gpu/drm/xe/xe_vm_types.h, drivers/gpu/drm/xe/xe_wa.c, drivers/gpu/drm/xe/xe_wa.h, drivers/gpu/drm/xe/xe_wait_user_fence.c, drivers/gpu/drm/xe/xe_wait_user_fence.h, drivers/gpu/drm/xe/xe_wopcm.c, drivers/gpu/drm/xe/xe_wopcm.h, drivers/gpu/drm/xe/xe_wopcm_types.h, include/drm/xe_pciids.h, include/uapi/drm/xe_drm.h
+GT-Fix file overlap: ['drivers/gpu/drm/xe/xe_ggtt.c']
+
+Candidate set size: 105 (detail reports: 105)
+GT in candidates: True
+GT position: 0 (from end: 104)
+
+Predicted BIC: 919bb54e989c  (2024-08-22 14:00:45 -0400)
+Predicted position: 64
+
+Agent explanation (truncated): The bug was that the code called alloc_workqueue() to allocate a workqueue for GGTT operations but failed to check if the allocation succeeded. If alloc_workqueue() returns NULL (indicating memory allocation failure), the code would continue executing with ggtt->wq set to NULL, which would later cause crashes or undefined behavior when the workqueue is used. Candidate_65 introduced this bug by adding the line: ggtt->wq = alloc_workqueue("xe-ggtt-wq", 0, 0); without any subsequent error checking.
+
+CLASSIFICATION: questionable_label
+ANALYSIS: The GT BIC (pos 0, 'drm/xe: Introduce a new DRM driver for Intel GPUs') is a massive commit that introduced the entire xe driver. The agent predicted (pos 64) a commit that actually added the workqueue usage pattern, which was not present in the initial version of the code.
+
+====================================================================================================
+CASE 7: Entry 543
+====================================================================================================
+
+Fix commit: 8d8e882c2b4b  (2026-01-08 12:50:48 -0800)
+Fix files: arch/arm64/include/asm/kvm_pgtable.h
+Ground truth BIC: 6537565fd9b7  (2023-06-12 23:17:23 +0000)
+GT BIC files: arch/arm64/kvm/hyp/pgtable.c
+GT-Fix file overlap: []
+
+CLASSIFICATION: bic_not_in_candidates
+
+====================================================================================================
+CASE 8: Entry 2007
+====================================================================================================
+
+Fix commit: 896f1a2493b5  (2025-11-18 11:09:58 +0100)
+Fix files: drivers/net/ethernet/qlogic/qede/qede_fp.c
+Ground truth BIC: 55482edc25f0  (2016-03-07 15:01:40 -0500)
+GT BIC files: drivers/net/ethernet/qlogic/qede/qede.h, drivers/net/ethernet/qlogic/qede/qede_main.c
+GT-Fix file overlap: []
+
+CLASSIFICATION: bic_not_in_candidates
+
+====================================================================================================
+CASE 9: Entry 1764
+====================================================================================================
+
+Fix commit: 66e7c1e0ee08  (2025-11-24 15:44:48 +0100)
+Fix files: kernel/printk/printk.c
+Ground truth BIC: 26873e3e7f0c  (2025-11-19 16:01:31 +0100)
+GT BIC files: kernel/printk/internal.h, kernel/printk/nbcon.c, kernel/printk/printk.c
+GT-Fix file overlap: ['kernel/printk/printk.c']
+
+Candidate set size: 649 (detail reports: 649)
+GT in candidates: True
+GT position: 646 (from end: 2)
+
+Predicted BIC: 6690d6b52726  (2024-08-21 14:56:49 +0200)
+Predicted position: 615
+
+Agent explanation (truncated): Candidate_616 introduced the bug by adding a hack in vprintk_emit() to support printk_deferred(). Specifically, on line 191 of the diff, it introduced: ```c if (level == LOGLEVEL_SCHED) { level = LOGLEVEL_DEFAULT; ft.legacy_offload |= ft.legacy_direct; ft.legacy_direct = false; } ```
+
+CLASSIFICATION: incorrect_analysis
+ANALYSIS: The GT commit was committed only 5 days before the fix. The agent identified the correct subsystem (printk flush type handling) but selected a commit from a year earlier that introduced the flush type infrastructure rather than the recent commit that added the specific suspend-related blocking logic.
+
+====================================================================================================
+CASE 10: Entry 3764
+====================================================================================================
+
+Fix commit: f04aad36a07c  (2025-10-07 14:01:12 -0700)
+Fix files: include/linux/mm.h, rust/bindings/bindings_helper.h
+Ground truth BIC: 7677f7fd8be7  (2021-05-05 11:27:22 -0700)
+GT BIC files: arch/arm64/Kconfig, arch/x86/Kconfig, fs/proc/task_mmu.c, fs/userfaultfd.c, include/linux/mm.h, include/linux/userfaultfd_k.h, include/trace/events/mmflags.h, include/uapi/linux/userfaultfd.h, init/Kconfig, mm/hugetlb.c
+GT-Fix file overlap: ['include/linux/mm.h']
+
+Candidate set size: 1608 (detail reports: 1608)
+GT in candidates: True
+GT position: 985 (from end: 622)
+
+Predicted BIC: f8af4da3b4c1  (2009-09-22 07:17:31 -0700)
+Predicted position: 231
+
+CLASSIFICATION: could_not_determine
+
+====================================================================================================
+CASE 11: Entry 2818
+====================================================================================================
+
+Fix commit: 448bf7b51426  (2025-10-30 14:55:08 -0700)
+Fix files: drivers/net/wireless/ath/ath12k/mac.c
+Ground truth BIC: 0d6e6736ed9f  (2024-04-10 17:12:14 +0300)
+GT BIC files: drivers/net/wireless/ath/ath12k/mac.c
+GT-Fix file overlap: ['drivers/net/wireless/ath/ath12k/mac.c']
+
+Candidate set size: 342 (detail reports: 342)
+GT in candidates: True
+GT position: 78 (from end: 263)
+
+Predicted BIC: 314876885bdc  (2024-04-10 17:12:14 +0300)
+Predicted position: 79
+
+Agent explanation (truncated): The bug was introduced when candidate_80 refactored the vdev creation logic by splitting it into two functions: `ath12k_mac_vdev_create()` and `ath12k_mac_assign_vif_to_vdev()`. Before this commit, the vdev limit check (`if (ar->num_created_vdevs > (TARGET_NUM_VDEVS - 1))`) was performed directly in the function that handled vdev creation (`ath12k_mac_op_add_interface()`), ensuring all vdev creation attempts were guarded by the limit check. Candidate_80 extracted the vdev creation logic into a n
+
+CLASSIFICATION: near_miss
+ANALYSIS: The predicted BIC is only 1 position from the GT BIC. These are consecutive commits from the same patch series by the same author, submitted at the exact same timestamp. The fix commit actually has TWO Fixes: tags pointing to both commits, confirming both contribute to the bug. The agent picked the other valid fix target.
+
+====================================================================================================
+CASE 12: Entry 54
+====================================================================================================
+
+Fix commit: 05cd654829dd  (2026-01-27 16:33:32 +0100)
+Fix files: drivers/irqchip/irq-ls-extirq.c
+Ground truth BIC: 1b1f04d8271e  (2025-11-17 11:27:51 -0600)
+GT BIC files: drivers/of/irq.c
+GT-Fix file overlap: []
+
+CLASSIFICATION: bic_not_in_candidates
+
+====================================================================================================
+CASE 13: Entry 1333
+====================================================================================================
+
+Fix commit: 8b0e69763ef9  (2025-12-04 17:53:49 -0800)
+Fix files: drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+Ground truth BIC: 6cf3c971dc84  (2016-07-05 09:06:28 -0700)
+GT BIC files: drivers/net/ethernet/mellanox/mlxsw/spectrum.c, drivers/net/ethernet/mellanox/mlxsw/spectrum.h, drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c
+GT-Fix file overlap: ['drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c']
+
+Candidate set size: 637 (detail reports: 637)
+GT in candidates: True
+GT position: 34 (from end: 602)
+
+Predicted BIC: 5c8802f14a06  (2017-02-06 11:25:56 -0500)
+Predicted position: 70
+
+Agent explanation (truncated): Candidate_71 introduced the use-after-free bug by removing the kernel's ndo_neigh_construct/ndo_neigh_destroy callback mechanism and replacing it with direct neigh_entry allocation/free functions, but failing to add proper reference counting. The bug was introduced in the following way: 1. The commit removed ndo_neigh_construct and ndo_neigh_destroy callbacks from the net_device_ops structure. These callbacks were previously used by the kernel to manage neighbour lifecycle and implicitly handled
+
+CLASSIFICATION: incorrect_analysis
+ANALYSIS: The GT introduced neighbour entries without proper reference counting. The agent picked a later refactoring commit that simplified neighbour handling but was not the root cause. The fix commit message clearly states the issue is about missing reference counting from the initial design.

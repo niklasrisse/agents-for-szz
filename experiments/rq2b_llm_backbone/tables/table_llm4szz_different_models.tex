@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\caption{Comparison of SZZ-Agent against LLM4SZZ with different underlying models on 200 samples. Best results in \textbf{bold}.}
+\label{tab:results_models}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Approach} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\midrule
+LLM4SZZ (gpt-4o-mini) & 0.65 & 0.64 & 0.64 \\
+LLM4SZZ (gpt-5.2) & 0.61 & 0.60 & 0.61 \\
+LLM4SZZ (claude-opus-4-5) & 0.66 & 0.65 & 0.65 \\
+\midrule
+\rowcolor{gray!20} \textbf{SZZ-Agent (claude-opus-4-5)} & \textbf{0.78} & \textbf{0.76} & \textbf{0.77} \\
+\bottomrule
+\end{tabular}
+\end{table}

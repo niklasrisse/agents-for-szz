@@ -1,0 +1,41 @@
+\documentclass[border=5pt]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[
+    width=10cm,
+    height=5.6cm,
+    ybar,
+    bar width=20pt,
+    ylabel={Avg.\ number of tool calls},
+    ymin=0,
+    ymax=11,
+    symbolic x coords={Read,Grep,Write,Glob,Task},
+    xtick=data,
+    x tick label style={font=\small},
+    tick label style={font=\small},
+    label style={font=\small},
+    grid=major,
+    grid style={gray!30},
+    ymajorgrids=true,
+    xmajorgrids=false,
+    point meta=explicit symbolic,
+    nodes near coords={\pgfplotspointmeta},
+    nodes near coords style={font=\scriptsize, anchor=south},
+    enlarge x limits=0.15,
+    xtick pos=left,
+]
+\addplot[
+    fill=blue!50,
+    draw=blue!70!black,
+] coordinates {
+    (Read, 9.80) [9.8]
+    (Grep, 2.70) [2.7]
+    (Write, 1.00) [1.0]
+    (Glob, 0.77) [0.8]
+    (Task, 0.01) [0.01]
+};
+\end{axis}
+\end{tikzpicture}
+\end{document}

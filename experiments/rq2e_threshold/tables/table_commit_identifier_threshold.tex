@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\caption{Impact of the Commit Identifier threshold on SZZ-Agent performance. Costs are average per fix commit. Best results in \textbf{bold}.}
+\label{tab:commit_identifier_threshold}
+\begin{tabular}{c ccc c}
+\toprule
+\makecell{\textbf{Commit} \\ \textbf{Identifier} \\ \textbf{Threshold}} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Cost (USD)} \\
+\midrule
+8 & 0.76 & 0.75 & 0.76 & \$0.68 \\
+32 & 0.81 & 0.80 & 0.81 & \$0.67 \\
+128 & 0.80 & 0.79 & 0.80 & \$0.39 \\
+512 & 0.81 & 0.80 & 0.81 & \$0.35 \\
+$\infty$ & \textbf{0.82} & \textbf{0.81} & \textbf{0.82} & \textbf{\$0.33} \\
+\bottomrule
+\end{tabular}
+\end{table}

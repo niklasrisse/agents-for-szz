@@ -1,0 +1,18 @@
+\begin{table*}[t]
+\centering
+\caption{Comparison of SZZ-Agent and Simple-SZZ-Agent for bug-inducing commit identification. Best results per dataset in \textbf{bold}.}
+\label{tab:agent_comparison}
+\begin{tabular}{lccccccccc}
+\toprule
+ & \multicolumn{3}{c}{\textbf{DS\_LINUX}} & \multicolumn{3}{c}{\textbf{DS\_GITHUB-c}} & \multicolumn{3}{c}{\textbf{DS\_GITHUB-j}} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7} \cmidrule(lr){8-10}
+\textbf{Approach} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} \\
+\midrule
+SZZ & 0.49 & 0.60 & 0.54 & 0.46 & 0.61 & 0.53 & 0.48 & 0.68 & 0.57 \\
+LLM4SZZ & 0.65 & 0.64 & 0.64 & 0.63 & 0.62 & 0.63 & 0.55 & 0.55 & 0.55 \\
+SZZ-Agent & 0.78 & 0.76 & 0.77 & \textbf{0.75} & 0.74 & \textbf{0.75} & 0.67 & 0.67 & 0.67 \\
+\midrule
+\rowcolor{gray!20} \textbf{Simple-SZZ-Agent} & \textbf{0.82} & \textbf{0.81} & \textbf{0.81} & \textbf{0.75} & \textbf{0.75} & \textbf{0.75} & \textbf{0.75} & \textbf{0.75} & \textbf{0.75} \\
+\bottomrule
+\end{tabular}
+\end{table*}

@@ -1,0 +1,42 @@
+\begin{tikzpicture}
+\begin{axis}[
+    width=0.95\columnwidth,
+    height=0.7\columnwidth,
+    xbar,
+    bar width=8pt,
+    xlabel={Percentage of grep calls (\%)},
+    xmin=0,
+    xmax=60,
+    symbolic y coords={{Commit Hash Pattern},{FC Diff Raw Match},{FC Diff Path Components},{Undetermined},{FC Diff File Paths},{FC Diff Hunk Headers},{FC Diff Function Names},{FC Diff Context Lines},{FC Diff Added Lines},{FC Message},{FC Diff Removed Lines}},
+    ytick=data,
+    y tick label style={font=\small, anchor=east},
+    tick label style={font=\small},
+    label style={font=\small},
+    grid=major,
+    grid style={gray!30},
+    xmajorgrids=true,
+    ymajorgrids=false,
+    point meta=explicit symbolic,
+    nodes near coords={\pgfplotspointmeta},
+    nodes near coords style={font=\scriptsize, anchor=west},
+    enlarge y limits=0.08,
+    clip=false,
+]
+\addplot[
+    fill=blue!50,
+    draw=blue!70!black,
+] coordinates {
+    (0.4,{Commit Hash Pattern}) [0.4\%]
+    (1.6,{FC Diff Raw Match}) [1.6\%]
+    (7.4,{FC Diff Path Components}) [7.4\%]
+    (8.6,{Undetermined}) [8.6\%]
+    (9.1,{FC Diff File Paths}) [9.1\%]
+    (11.9,{FC Diff Hunk Headers}) [11.9\%]
+    (11.9,{FC Diff Function Names}) [11.9\%]
+    (25.9,{FC Diff Context Lines}) [25.9\%]
+    (30.9,{FC Diff Added Lines}) [30.9\%]
+    (43.6,{FC Message}) [43.6\%]
+    (48.1,{FC Diff Removed Lines}) [48.1\%]
+};
+\end{axis}
+\end{tikzpicture}

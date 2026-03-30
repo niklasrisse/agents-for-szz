@@ -1,0 +1,22 @@
+\begin{table*}[t]
+\centering
+\caption{Simple-SZZ-Agent with different underlying models and agents. Best results in \textbf{bold}.}
+\label{tab:results_cheaper_models}
+\begin{tabular}{llcccccc}
+\toprule
+ & & & & & \multicolumn{3}{c}{\textit{Avg.\ per Fix Commit}} \\
+\cmidrule(l){6-8}
+\textbf{Agent} & \textbf{Model} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-Score} & \textbf{Cost} & \textbf{Tool Calls} & \textbf{Tokens} \\
+\midrule
+Claude Code & claude-haiku-4-5 & 0.75 & 0.73 & 0.74 & \$0.09 & 14.2 & 339k \\
+Claude Code & claude-sonnet-4-5 & 0.81 & 0.80 & 0.80 & \$0.25 & 16.7 & 290k \\
+Claude Code & claude-opus-4-5 & 0.83 & 0.81 & 0.82 & \$0.38 & 14.3 & \textbf{284k} \\
+\midrule
+OpenHands & claude-haiku-4-5 & 0.80 & 0.79 & 0.79 & \$0.14 & 15.7 & 1.3M \\
+OpenHands & claude-sonnet-4-5 & \textbf{0.87} & \textbf{0.86} & \textbf{0.86} & \$0.38 & \textbf{14.0} & 1.0M \\
+OpenHands & claude-opus-4.5 & 0.84 & 0.82 & 0.83 & \$0.63 & 16.9 & 1.0M \\
+OpenHands & minimax-m2.5 & 0.80 & 0.78 & 0.79 & \textbf{\$0.04} & 20.0 & 1.3M \\
+OpenHands & glm-5 & 0.79 & 0.78 & 0.78 & \$0.26 & 17.8 & 754k \\
+\bottomrule
+\end{tabular}
+\end{table*}
