@@ -1,7 +1,6 @@
 arvo.db
 arvo.db-shm
 arvo.db-wal
-data/
 repos/
 .DS_Store
 __pycache__/
