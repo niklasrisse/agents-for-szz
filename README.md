@@ -2,10 +2,21 @@
 
 Code and Data for the paper "How and Why Agents Can Identify Bug-Introducing Commits" (Currently Under Review).
 
-## Authors
+## Citation
 
-- **Niklas Risse** — Max Planck Institute for Security and Privacy, Bochum, Germany
-- **Marcel Böhme** — Max Planck Institute for Security and Privacy, Bochum, Germany
+If you use this work, please cite:
+
+```bibtex
+@misc{risse2026simpleszzagent,
+      title={How and Why Agents Can Identify Bug-Introducing Commits},
+      author={Niklas Risse and Marcel Böhme},
+      year={2026},
+      eprint={2603.29378},
+      archivePrefix={arXiv},
+      primaryClass={cs.SE},
+      url={https://arxiv.org/abs/2603.29378},
+}
+```
 
 ## Repository Structure
 
