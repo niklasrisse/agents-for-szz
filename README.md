@@ -1,20 +1,21 @@
-# How and Why Agents Can Identify Bug-Introducing Commits
+# LLM-Based Agents for Identifying Bug-Introducing Commits
 
-Code and Data for the paper "How and Why Agents Can Identify Bug-Introducing Commits" (Currently Under Review).
+Code and Data for the paper "LLM-Based Agents for Identifying Bug-Introducing Commits" (ASE 2026).
 
 ## Citation
 
 If you use this work, please cite:
 
 ```bibtex
-@misc{risse2026simpleszzagent,
-      title={How and Why Agents Can Identify Bug-Introducing Commits},
-      author={Niklas Risse and Marcel Böhme},
-      year={2026},
-      eprint={2603.29378},
-      archivePrefix={arXiv},
-      primaryClass={cs.SE},
-      url={https://arxiv.org/abs/2603.29378},
+@inproceedings{risse2026szz,
+  author    = {Risse, Niklas and B{\"o}hme, Marcel},
+  title     = {{LLM}-Based Agents for Identifying Bug-Introducing Commits},
+  booktitle = {Proceedings of the 41st IEEE/ACM International Conference on Automated Software Engineering},
+  series    = {ASE '26},
+  year      = {2026},
+  pages     = {81--92},
+  publisher = {ACM},
+  doi       = {10.1145/3832783.3834337}
 }
 ```
 
